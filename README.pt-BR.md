@@ -14,6 +14,21 @@ App de barra de menus para macOS que desliga o **True Tone** (e o Night Shift) a
 
 ![You're in control.](Promo/04-control.png)
 
+## Download
+
+Baixe o **TrueView.zip** na [release mais recente](https://github.com/lucashaliax/TrueView/releases/latest), descompacte e arraste o `TrueView.app` para `/Applications` (Aplicativos).
+
+O TrueView não é notarizado pela Apple, então o macOS bloqueia a primeira abertura. Para liberar:
+
+1. Abra o TrueView uma vez. O macOS vai dizer que não pode verificar o desenvolvedor; clique em **OK**.
+2. Vá em **Ajustes do Sistema → Privacidade e Segurança**, role até o fim e clique em **Abrir Mesmo Assim** ao lado do TrueView.
+
+Ou rode isto uma vez no Terminal:
+
+```bash
+xattr -dr com.apple.quarantine /Applications/TrueView.app
+```
+
 ## Funcionalidades
 
 - Monitora a abertura/fechamento (ou o primeiro plano) dos apps escolhidos
@@ -31,7 +46,7 @@ App de barra de menus para macOS que desliga o **True Tone** (e o Night Shift) a
 - macOS 26 ou mais recente, Apple Silicon
 - Xcode Command Line Tools (`xcode-select --install`)
 
-## Compilar
+## Compilar o código
 
 ```bash
 ./build.sh

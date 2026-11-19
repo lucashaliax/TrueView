@@ -14,6 +14,21 @@ A macOS menu bar app that automatically turns off **True Tone** (and Night Shift
 
 ![You're in control.](Promo/04-control.png)
 
+## Download
+
+Grab **TrueView.zip** from the [latest release](https://github.com/lucashaliax/TrueView/releases/latest), unzip it and drag `TrueView.app` to `/Applications`.
+
+TrueView isn't notarized by Apple, so macOS blocks it the first time you open it. To allow it:
+
+1. Open TrueView once. macOS will say it can't verify the developer; click **Done**.
+2. Go to **System Settings → Privacy & Security**, scroll down and click **Open Anyway** next to TrueView.
+
+Or run this once in Terminal:
+
+```bash
+xattr -dr com.apple.quarantine /Applications/TrueView.app
+```
+
 ## Features
 
 - Watches when your chosen apps open and close (or come to the front)
@@ -31,7 +46,7 @@ A macOS menu bar app that automatically turns off **True Tone** (and Night Shift
 - macOS 26 or later, Apple Silicon
 - Xcode Command Line Tools (`xcode-select --install`)
 
-## Build
+## Build from source
 
 ```bash
 ./build.sh
