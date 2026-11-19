@@ -1,8 +1,10 @@
 # TrueView
 
+**English** · [Português](README.pt-BR.md)
+
 ![TrueView — True color. Automatically.](Promo/01-hero.png)
 
-App de barra de menus para macOS que desliga o **True Tone** (e o Night Shift) automaticamente quando você abre apps de edição de imagem — Lightroom Classic, Lightroom, Photoshop, Fotos, Capture One etc. — e restaura tudo quando eles fecham.
+A macOS menu bar app that automatically turns off **True Tone** (and Night Shift) when you open a photo editing app — Lightroom Classic, Lightroom, Photoshop, Photos, Capture One and more — and restores everything when you close it.
 
 ## Screenshots
 
@@ -12,43 +14,43 @@ App de barra de menus para macOS que desliga o **True Tone** (e o Night Shift) a
 
 ![You're in control.](Promo/04-control.png)
 
-## Funcionalidades
+## Features
 
-- Monitora a abertura/fechamento (ou o primeiro plano) dos apps escolhidos
-- Desliga True Tone e Night Shift no "modo edição"
-- Brilho personalizado da tela interna, com volta ao brilho anterior
-- Restaura só o que o app mudou; se o True Tone já estava desligado, continua desligado
-- Espera configurável antes de restaurar (evita a tela piscar ao trocar de app)
-- Recupera o estado da tela se o app for encerrado à força
-- Lista de apps configurável (adicionar pela pasta Aplicativos, pelos apps abertos ou arrastando)
-- Abrir ao iniciar sessão, notificações, idioma Português/English
-- Interface em Liquid Glass
+- Watches when your chosen apps open and close (or come to the front)
+- Turns off True Tone and Night Shift in "edit mode"
+- Custom brightness for the built-in display, with a return to your previous level
+- Only restores what it changed: if True Tone was already off, it stays off
+- Adjustable delay before restoring, so the screen doesn't flicker when you switch apps
+- Recovers the display state if the app is force-quit
+- Configurable app list (add from Applications, from running apps, or by dragging)
+- Open at login, notifications, English/Portuguese interface
+- Liquid Glass interface
 
-## Requisitos
+## Requirements
 
-- macOS 26 ou mais recente, Apple Silicon
+- macOS 26 or later, Apple Silicon
 - Xcode Command Line Tools (`xcode-select --install`)
 
-## Compilar
+## Build
 
 ```bash
 ./build.sh
 ```
 
-O app é gerado em `build/TrueView.app`. Copie para `/Applications`.
+The app is built to `build/TrueView.app`. Copy it to `/Applications`.
 
-O ícone é desenhado em código (`Icon/IconRenderer.swift`); para regerar o `.icns`, rode o renderer e o `iconutil` (veja os comentários no arquivo).
+The icon is drawn in code (`Icon/IconRenderer.swift`); to regenerate the `.icns`, run the renderer and then `iconutil`.
 
-As imagens promocionais também são geradas em código:
+The promo images are generated in code too:
 
 ```bash
 swiftc -O -swift-version 5 Promo/PromoRenderer.swift -o build/promo-render && build/promo-render
 ```
 
-## Observação
+## Note
 
-True Tone, Night Shift e brilho são controlados por frameworks privados da Apple (`CoreBrightness`, `DisplayServices`), carregados em tempo de execução. Funcionam no macOS atual, mas podem mudar em futuras versões — por isso o app não é distribuível pela App Store.
+True Tone, Night Shift and brightness are controlled through private Apple frameworks (`CoreBrightness`, `DisplayServices`), loaded at runtime. They work on current macOS but may change in future versions — which is also why the app can't be distributed through the App Store.
 
 ---
 
-Desenvolvido por Lucas Haliax
+Developed by Lucas Haliax
