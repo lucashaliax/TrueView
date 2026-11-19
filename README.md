@@ -1,8 +1,16 @@
 # TrueView
 
+![TrueView — True color. Automatically.](Promo/01-hero.png)
+
 App de barra de menus para macOS que desliga o **True Tone** (e o Night Shift) automaticamente quando você abre apps de edição de imagem — Lightroom Classic, Lightroom, Photoshop, Fotos, Capture One etc. — e restaura tudo quando eles fecham.
 
-<p align="center"><img src="Icon/icon_1024.png" width="160" alt="Ícone do TrueView"></p>
+## Screenshots
+
+![Open. Edit. Done.](Promo/02-how-it-works.png)
+
+![See your photos as they really are.](Promo/03-true-color.png)
+
+![You're in control.](Promo/04-control.png)
 
 ## Funcionalidades
 
@@ -30,6 +38,12 @@ App de barra de menus para macOS que desliga o **True Tone** (e o Night Shift) a
 O app é gerado em `build/TrueView.app`. Copie para `/Applications`.
 
 O ícone é desenhado em código (`Icon/IconRenderer.swift`); para regerar o `.icns`, rode o renderer e o `iconutil` (veja os comentários no arquivo).
+
+As imagens promocionais também são geradas em código:
+
+```bash
+swiftc -O -swift-version 5 Promo/PromoRenderer.swift -o build/promo-render && build/promo-render
+```
 
 ## Observação
 
