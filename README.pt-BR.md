@@ -39,6 +39,7 @@ xattr -dr com.apple.quarantine /Applications/TrueView.app
 - Recupera o estado da tela se o app for encerrado à força
 - Lista de apps configurável (adicionar pela pasta Aplicativos, pelos apps abertos ou arrastando)
 - Abrir ao iniciar sessão, notificações, idioma Português/English
+- Atualiza sozinho: "Procurar atualizações" no Sobre (e uma verificação automática por dia) baixa o último release, verifica a assinatura e reabre o app
 - Interface em Liquid Glass
 
 ## Requisitos
@@ -49,10 +50,11 @@ xattr -dr com.apple.quarantine /Applications/TrueView.app
 ## Compilar o código
 
 ```bash
-./build.sh
+./build.sh          # compila, instala em /Applications, reabre e verifica o uso de recursos
+./build.sh --zip    # o mesmo, e gera build/release/TrueView.zip para um release no GitHub
 ```
 
-O app é gerado em `build/TrueView.app`. Copie para `/Applications`.
+O app é gerado em `~/Library/Developer/TrueView-build` (fora de `~/Documents`, cuja sincronização com o iCloud quebra a assinatura) e assinado com o seu certificado Apple Development (`SIGN_ID` para escolher outra identidade). A assinatura com um time é o que permite ao atualizador conferir que a atualização vem do mesmo desenvolvedor. Todo build termina com `tools/check_resources.sh`, que mede memória, CPU em repouso, ativações e vazamentos.
 
 O ícone é desenhado em código (`Icon/IconRenderer.swift`); para regerar o `.icns`, rode o renderer e o `iconutil` (veja os comentários no arquivo).
 

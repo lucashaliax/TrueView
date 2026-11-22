@@ -64,6 +64,7 @@ struct AppSettings: Codable, Equatable {
     var restoreDelay: Double = 2
     var notify = false
     var language: AppLanguage = .system
+    var checkForUpdates = true
 
     // Decodificação tolerante: chaves novas em versões futuras não apagam as configs antigas.
     init() {}
@@ -80,6 +81,7 @@ struct AppSettings: Codable, Equatable {
         restoreDelay = (try? c.decode(Double.self, forKey: .restoreDelay)) ?? d.restoreDelay
         notify = (try? c.decode(Bool.self, forKey: .notify)) ?? d.notify
         language = (try? c.decode(AppLanguage.self, forKey: .language)) ?? d.language
+        checkForUpdates = (try? c.decode(Bool.self, forKey: .checkForUpdates)) ?? d.checkForUpdates
     }
 
     private static let key = "settings.v1"

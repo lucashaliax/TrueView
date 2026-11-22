@@ -15,6 +15,13 @@ enum SettingsTab: String, CaseIterable, Identifiable {
     }
 }
 
+/// Aba selecionada, compartilhada para que a notificação de atualização possa abrir o Sobre.
+@MainActor
+final class SettingsNavigation: ObservableObject {
+    static let shared = SettingsNavigation()
+    @Published var tab: SettingsTab = .apps
+}
+
 // Estado local das telas (as Command Line Tools não trazem o plugin do macro @State).
 final class SettingsUIState: ObservableObject {
     @Published var tab: SettingsTab = .apps
@@ -27,12 +34,13 @@ final class SettingsUIState: ObservableObject {
 struct SettingsView: View {
     @EnvironmentObject var engine: AutomationEngine
     @StateObject private var ui = SettingsUIState()
+    @ObservedObject private var nav = SettingsNavigation.shared
 
     var body: some View {
         VStack(spacing: 14) {
             tabBar
             Group {
-                switch ui.tab {
+                switch nav.tab {
                 case .apps: AppsPane(ui: ui)
                 case .trigger: TriggerPane()
                 case .general: GeneralPane(ui: ui)
@@ -51,16 +59,16 @@ struct SettingsView: View {
         GlassEffectContainer(spacing: 4) {
             HStack(spacing: 4) {
                 ForEach(SettingsTab.allCases) { tab in
-                    Button { withAnimation(.snappy) { ui.tab = tab } } label: {
+                    Button { withAnimation(.snappy) { nav.tab = tab } } label: {
                         Text(tab.title)
-                            .font(.callout.weight(ui.tab == tab ? .semibold : .regular))
+                            .font(.callout.weight(nav.tab == tab ? .semibold : .regular))
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 6)
                             .contentShape(.capsule)
                     }
                     .buttonStyle(.plain)
                     .background {
-                        if ui.tab == tab {
+                        if nav.tab == tab {
                             Capsule().fill(.background.opacity(0.85))
                                 .shadow(color: .black.opacity(0.08), radius: 2, y: 1)
                         }
@@ -273,6 +281,10 @@ struct GeneralPane: View {
                 Toggle("", isOn: $engine.settings.notify)
                     .toggleStyle(.switch).labelsHidden().controlSize(.small)
             }
+            setting("arrow.down.circle", tr("Procurar atualizações automaticamente", "Check for updates automatically")) {
+                Toggle("", isOn: $engine.settings.checkForUpdates)
+                    .toggleStyle(.switch).labelsHidden().controlSize(.small)
+            }
             setting("globe", tr("Idioma", "Language")) {
                 Picker("", selection: $engine.settings.language) {
                     ForEach(AppLanguage.allCases) { Text($0.label).tag($0) }
@@ -325,8 +337,79 @@ struct AboutPane: View {
             }
             .padding(.horizontal, 22).padding(.vertical, 10)
             .glassEffect(.regular, in: .capsule)
+            UpdateSection()
             Spacer()
         }
         .frame(maxWidth: .infinity)
+    }
+}
+
+// MARK: - Atualizações
+
+struct UpdateSection: View {
+    @ObservedObject private var updater = Updater.shared
+
+    var body: some View {
+        VStack(spacing: 10) {
+            switch updater.state {
+            case .idle:
+                GlassPillButton(title: tr("Procurar atualizações", "Check for Updates"), symbol: "arrow.down.circle") {
+                    Task { await updater.check() }
+                }
+                .fixedSize()
+            case .checking:
+                HStack(spacing: 8) { ProgressView().controlSize(.small); Text(tr("Procurando atualizações…", "Checking for updates…")) }
+                    .font(.callout)
+            case .upToDate:
+                Label(tr("O TrueView está atualizado", "TrueView is up to date"), systemImage: "checkmark.circle.fill")
+                    .font(.callout).foregroundStyle(.green)
+            case .available(let release):
+                VStack(spacing: 8) {
+                    Text(tr("A versão \(release.version) está disponível", "Version \(release.version) is available"))
+                        .font(.callout.weight(.semibold))
+                    if !release.notes.isEmpty {
+                        ScrollView {
+                            Text(LocalizedStringKey(Self.plain(release.notes)))
+                                .font(.caption)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .textSelection(.enabled)
+                        }
+                        .frame(maxHeight: 90)
+                    }
+                    HStack(spacing: 8) {
+                        GlassPillButton(title: tr("Notas", "Notes"), symbol: "doc.text") { NSWorkspace.shared.open(release.pageURL) }
+                        GlassPillButton(title: tr("Instalar e reabrir", "Install and Relaunch"), symbol: "arrow.down.circle.fill") {
+                            updater.install(release)
+                        }
+                    }
+                }
+                .padding(12).glassCard(16)
+            case .downloading:
+                HStack(spacing: 8) { ProgressView().controlSize(.small); Text(tr("Baixando…", "Downloading…")) }
+                    .font(.callout)
+            case .installing:
+                HStack(spacing: 8) { ProgressView().controlSize(.small); Text(tr("Instalando…", "Installing…")) }
+                    .font(.callout)
+            case .failed(let message):
+                Label(message, systemImage: "exclamationmark.triangle.fill")
+                    .font(.caption).foregroundStyle(.orange)
+                    .multilineTextAlignment(.center)
+                GlassPillButton(title: tr("Tentar de novo", "Try Again"), symbol: "arrow.clockwise") {
+                    Task { await updater.check() }
+                }
+                .fixedSize()
+            }
+        }
+        .padding(.horizontal, 20)
+    }
+
+    /// As notas do release são Markdown; mantém o estilo inline e tira títulos e blocos de código.
+    static func plain(_ markdown: String) -> String {
+        markdown
+            .components(separatedBy: "\n")
+            .filter { !$0.hasPrefix("```") }
+            .map { $0.hasPrefix("#") ? $0.trimmingCharacters(in: CharacterSet(charactersIn: "# ")) : $0 }
+            .joined(separator: "\n")
+            .trimmingCharacters(in: .whitespacesAndNewlines)
     }
 }

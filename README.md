@@ -39,6 +39,7 @@ xattr -dr com.apple.quarantine /Applications/TrueView.app
 - Recovers the display state if the app is force-quit
 - Configurable app list (add from Applications, from running apps, or by dragging)
 - Open at login, notifications, English/Portuguese interface
+- Updates itself: Check for Updates in About (and a daily automatic check) downloads the latest release, verifies its signature and relaunches
 - Liquid Glass interface
 
 ## Requirements
@@ -49,10 +50,11 @@ xattr -dr com.apple.quarantine /Applications/TrueView.app
 ## Build from source
 
 ```bash
-./build.sh
+./build.sh          # build, install in /Applications, relaunch, check resource use
+./build.sh --zip    # same, plus build/release/TrueView.zip for a GitHub release
 ```
 
-The app is built to `build/TrueView.app`. Copy it to `/Applications`.
+The app is built in `~/Library/Developer/TrueView-build` (outside `~/Documents`, whose iCloud sync breaks code signing) and signed with your Apple Development certificate (`SIGN_ID` to choose another identity). Signing with a team is what lets the updater check that an update comes from the same developer. Every build ends with `tools/check_resources.sh`, which measures memory, idle CPU, wakeups and leaks.
 
 The icon is drawn in code (`Icon/IconRenderer.swift`); to regenerate the `.icns`, run the renderer and then `iconutil`.
 
