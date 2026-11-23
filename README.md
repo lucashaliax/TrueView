@@ -39,7 +39,7 @@ xattr -dr com.apple.quarantine /Applications/TrueView.app
 - Recovers the display state if the app is force-quit
 - Configurable app list (add from Applications, from running apps, or by dragging)
 - Open at login, notifications, English/Portuguese interface
-- Updates itself: Check for Updates in About (and a daily automatic check) downloads the latest release, verifies its signature and relaunches
+- Updates itself: Check for Updates in About (and an optional weekly automatic check) downloads the latest release, verifies its signature and relaunches
 - Liquid Glass interface
 
 ## Requirements

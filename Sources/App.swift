@@ -13,7 +13,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
         }
     }
 
-    /// Procura atualizações uma vez por dia (o timer só confere a data a cada 6 horas).
+    /// Procura atualizações uma vez por semana, se ligado (o timer só confere a data a cada 6 horas).
     @MainActor private func startUpdateChecks() {
         UNUserNotificationCenter.current().delegate = self
         // `open -a TrueView --args -TrueViewRunUpdate YES` procura e instala a última versão
@@ -25,7 +25,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
             return
         }
         let tick = {
-            guard AutomationEngine.shared.settings.checkForUpdates else { return }
+            guard AutomationEngine.shared.settings.autoCheckUpdates else { return }
             Updater.shared.checkInBackgroundIfDue()
         }
         tick()

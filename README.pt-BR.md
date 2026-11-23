@@ -39,7 +39,7 @@ xattr -dr com.apple.quarantine /Applications/TrueView.app
 - Recupera o estado da tela se o app for encerrado à força
 - Lista de apps configurável (adicionar pela pasta Aplicativos, pelos apps abertos ou arrastando)
 - Abrir ao iniciar sessão, notificações, idioma Português/English
-- Atualiza sozinho: "Procurar atualizações" no Sobre (e uma verificação automática por dia) baixa o último release, verifica a assinatura e reabre o app
+- Atualiza sozinho: "Procurar atualizações" no Sobre (e uma verificação automática semanal, opcional) baixa o último release, verifica a assinatura e reabre o app
 - Interface em Liquid Glass
 
 ## Requisitos

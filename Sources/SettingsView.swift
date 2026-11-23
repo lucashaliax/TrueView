@@ -282,8 +282,10 @@ struct GeneralPane: View {
                     .toggleStyle(.switch).labelsHidden().controlSize(.small)
             }
             setting("arrow.down.circle", tr("Procurar atualizações automaticamente", "Check for updates automatically")) {
-                Toggle("", isOn: $engine.settings.checkForUpdates)
+                Toggle("", isOn: $engine.settings.autoCheckUpdates)
                     .toggleStyle(.switch).labelsHidden().controlSize(.small)
+                    .help(tr("Uma vez por semana. Uma notificação avisa quando sai uma versão nova.",
+                             "Once a week. A notification tells you when a new version is out."))
             }
             setting("globe", tr("Idioma", "Language")) {
                 Picker("", selection: $engine.settings.language) {

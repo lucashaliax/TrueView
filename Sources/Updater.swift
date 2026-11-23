@@ -93,10 +93,13 @@ final class Updater: ObservableObject {
         }
     }
 
-    /// Checks at most once a day; posts a notification the first time a version is found.
+    /// How often the automatic check runs (when the app turns it on).
+    static var checkInterval: TimeInterval = 7 * 24 * 3600
+
+    /// Checks at most once per `checkInterval`; posts a notification the first time a version is found.
     func checkInBackgroundIfDue() {
         let last = UserDefaults.standard.object(forKey: lastCheckKey) as? Date ?? .distantPast
-        guard Date().timeIntervalSince(last) > 24 * 3600 else { return }
+        guard Date().timeIntervalSince(last) > Self.checkInterval else { return }
         Task {
             guard let release = await check() else { return }
             guard UserDefaults.standard.string(forKey: notifiedKey) != release.version else { return }

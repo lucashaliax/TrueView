@@ -7,8 +7,8 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 
-VERSION="${VERSION:-0.2}"
-BUILD_NUMBER="${BUILD_NUMBER:-2}"
+VERSION="${VERSION:-0.3}"
+BUILD_NUMBER="${BUILD_NUMBER:-3}"
 # Signed with the developer's team (not ad hoc) so the in-app updater can check that an
 # update comes from the same developer.
 SIGN_ID="${SIGN_ID:-Apple Development}"
@@ -71,5 +71,7 @@ ditto "$APP" /Applications/TrueView.app
 open -g /Applications/TrueView.app
 echo "Installed /Applications/TrueView.app"
 
-sleep 5
+# Wait out launch work (e.g. an update check, which uses the network) so the measurement
+# shows the app at rest.
+sleep 15
 tools/check_resources.sh /Applications/TrueView.app

@@ -64,7 +64,9 @@ struct AppSettings: Codable, Equatable {
     var restoreDelay: Double = 2
     var notify = false
     var language: AppLanguage = .system
-    var checkForUpdates = true
+    /// Verificação semanal de atualização. Desligada por padrão; chave nova porque a antiga
+    /// (`checkForUpdates`) foi salva como ligada quando esse era o padrão.
+    var autoCheckUpdates = false
 
     // Decodificação tolerante: chaves novas em versões futuras não apagam as configs antigas.
     init() {}
@@ -81,7 +83,7 @@ struct AppSettings: Codable, Equatable {
         restoreDelay = (try? c.decode(Double.self, forKey: .restoreDelay)) ?? d.restoreDelay
         notify = (try? c.decode(Bool.self, forKey: .notify)) ?? d.notify
         language = (try? c.decode(AppLanguage.self, forKey: .language)) ?? d.language
-        checkForUpdates = (try? c.decode(Bool.self, forKey: .checkForUpdates)) ?? d.checkForUpdates
+        autoCheckUpdates = (try? c.decode(Bool.self, forKey: .autoCheckUpdates)) ?? d.autoCheckUpdates
     }
 
     private static let key = "settings.v1"
