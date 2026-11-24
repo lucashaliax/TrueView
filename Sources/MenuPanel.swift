@@ -5,19 +5,22 @@ import AppKit
 struct MenuPanel: View {
     @EnvironmentObject var engine: AutomationEngine
     @Environment(\.openWindow) private var openWindow
+    @StateObject private var entrance = PanelEntrance()
 
     var body: some View {
         GlassEffectContainer(spacing: 10) {
             VStack(spacing: 10) {
-                header
-                editModeCard
-                actionsCard
-                footer
+                header.entrance(0, entrance.shown)
+                editModeCard.entrance(1, entrance.shown)
+                actionsCard.entrance(2, entrance.shown)
+                footer.entrance(3, entrance.shown)
             }
             .padding(12)
         }
         .frame(width: 310)
         .tint(.green)
+        .onAppear { entrance.play() }
+        .onDisappear { entrance.reset() }
     }
 
     // MARK: Cabeçalho
@@ -25,6 +28,8 @@ struct MenuPanel: View {
     private var header: some View {
         HStack(spacing: 10) {
             SymbolTile(symbol: "camera.aperture", size: 30)
+                .rotationEffect(.degrees(entrance.shown ? 0 : -70))
+                .animation(.spring(duration: 0.6, bounce: 0.3), value: entrance.shown)
             VStack(alignment: .leading, spacing: 1) {
                 Text("TrueView").font(.headline)
                 Text(statusText).font(.caption).foregroundStyle(.secondary).lineLimit(1)
@@ -140,5 +145,35 @@ struct ActionRow: View {
             Toggle("", isOn: $isOn).toggleStyle(.switch).labelsHidden().controlSize(.small)
         }
         .padding(.horizontal, 10).padding(.vertical, 6)
+    }
+}
+
+// MARK: - Animação de abertura
+
+/// Controla a entrada do conteúdo do painel a cada clique no ícone da barra de menus.
+/// (A janela em si é aberta pelo macOS; aqui só o conteúdo é animado.)
+final class PanelEntrance: ObservableObject {
+    @Published var shown = false
+
+    func play() {
+        shown = false
+        // Espera um ciclo para o estado inicial ser desenhado antes de animar.
+        DispatchQueue.main.async { self.shown = true }
+    }
+
+    func reset() {
+        var t = Transaction(); t.disablesAnimations = true
+        withTransaction(t) { shown = false }
+    }
+}
+
+extension View {
+    /// Cada seção desce, cresce levemente e aparece, em cascata.
+    func entrance(_ index: Int, _ shown: Bool) -> some View {
+        self
+            .opacity(shown ? 1 : 0)
+            .offset(y: shown ? 0 : -8)
+            .scaleEffect(shown ? 1 : 0.96, anchor: .top)
+            .animation(.spring(duration: 0.45, bounce: 0.22).delay(Double(index) * 0.045), value: shown)
     }
 }

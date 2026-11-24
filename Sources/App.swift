@@ -100,9 +100,17 @@ struct MenuBarLabel: View {
     @Environment(\.openWindow) private var openWindow
 
     var body: some View {
-        // Diafragma do ícone do app, em branco (template) para ficar legível na barra.
-        Image(systemName: "camera.aperture")
-            .font(.system(size: 15, weight: .medium))
+        // Diafragma do ícone do app, em branco (template). A barra de menus ignora `.font`,
+        // então a imagem já vem no tamanho dos ícones do sistema e com traço mais grosso.
+        Image(nsImage: Self.icon)
             .onAppear { WindowOpener.openSettings = { openWindow(id: "settings") } }
     }
+
+    private static let icon: NSImage = {
+        let config = NSImage.SymbolConfiguration(pointSize: 17, weight: .semibold)
+        let image = NSImage(systemSymbolName: "camera.aperture", accessibilityDescription: "TrueView")?
+            .withSymbolConfiguration(config) ?? NSImage()
+        image.isTemplate = true
+        return image
+    }()
 }

@@ -22,6 +22,8 @@ A macOS menu bar app (Liquid Glass UI) that turns off True Tone and Night Shift,
 
 - Signed with the team, not ad hoc, so the updater can verify that an update comes from the same developer. Because of the signature change in 0.2, macOS may ask again for permissions (notifications, open at login).
 - Menu bar toggles instead of an activation history (removed on purpose).
+- Menu bar icon is an `NSImage` symbol (17 pt, semibold, template) because `MenuBarExtra` labels ignore `.font`; at the default size it looked smaller than the system icons.
+- The panel content animates in on each open (`PanelEntrance` in `MenuPanel.swift`: staggered spring, aperture rotates in). The window itself is opened by macOS and can't be animated.
 - Interface in English by default, Portuguese in settings.
 - Update test without UI: `open -a TrueView --args -TrueViewRunUpdate YES`.
 
