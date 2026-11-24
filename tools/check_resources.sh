@@ -16,6 +16,8 @@ pgrep -f "$APP/Contents/MacOS/" >/dev/null || { open -g "$APP"; sleep 5; }
 
 # The app plus anything it embeds (extensions, helpers) that is running.
 pids=(${(f)"$(pgrep -f "$APP/Contents/")"})
+# Só processos cujo executável está dentro do app (pgrep -f também pega shells que citam o caminho).
+pids=(${pids:#}); pids=(${(f)"$(for p in $pids; do [[ "$(ps -o comm= -p $p)" == "$APP/Contents/"* ]] && echo $p; done)"})
 (( ${#pids} )) || { echo "✗ $NAME is not running"; exit 1; }
 
 echo "Measuring $NAME for ${SAMPLE}s while idle…"

@@ -30,5 +30,5 @@ A macOS menu bar app (Liquid Glass UI) that turns off True Tone and Night Shift,
 
 ## Status
 
-- Current release: 0.3 (automatic update check is weekly and off by default; setting `autoCheckUpdates`, the old `checkForUpdates` key was saved as on and is ignored).
+- Current release: 0.4 (menu bar icon at system size, panel in an NSPopover with the native animation). Since 0.3 the automatic update check is weekly and off by default (setting `autoCheckUpdates`; the old `checkForUpdates` key was saved as on and is ignored).
 - No open tasks. Bugs are reported by the user as they find them.

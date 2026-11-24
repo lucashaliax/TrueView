@@ -7,8 +7,8 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 
-VERSION="${VERSION:-0.3}"
-BUILD_NUMBER="${BUILD_NUMBER:-3}"
+VERSION="${VERSION:-0.4}"
+BUILD_NUMBER="${BUILD_NUMBER:-4}"
 # Signed with the developer's team (not ad hoc) so the in-app updater can check that an
 # update comes from the same developer.
 SIGN_ID="${SIGN_ID:-Apple Development}"
